@@ -18,6 +18,9 @@ import {
   Alert,
   Avatar,
   useTheme,
+  FormControl,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import {
   Notifications,
@@ -31,6 +34,7 @@ import {
   Email,
   Person,
   Logout,
+  Language,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme as useCustomTheme } from '../contexts/ThemeContext';
@@ -50,6 +54,7 @@ const Settings: React.FC = () => {
     name: user?.name || '',
     email: user?.email || '',
   });
+  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
   // Check if we should open edit profile dialog from URL params
   useEffect(() => {
@@ -142,7 +147,7 @@ const Settings: React.FC = () => {
       {/* Notifications */}
       <Paper sx={{ p: 3, mb: 2, pb: 0 }}>
         <Typography variant="h6" gutterBottom fontWeight={600}>
-          Notifications
+          Notification Preferences
         </Typography>
         <List>
           <ListItem>
@@ -192,6 +197,42 @@ const Settings: React.FC = () => {
               checked={mode === 'dark'}
               onChange={toggleTheme}
             />
+          </ListItem>
+        </List>
+      </Paper>
+
+      {/* Timezone Settings */}
+      <Paper sx={{ p: 3, mb: 2, pb: 0 }}>
+        <Typography variant="h6" gutterBottom fontWeight={600}>
+          Timezone Settings
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <Language />
+            </ListItemIcon>
+            <ListItemText
+              primary="Timezone"
+              secondary={`Current: ${timezone}`}
+            />
+            <FormControl sx={{ minWidth: 200 }}>
+              <Select
+                value={timezone}
+                onChange={(e) => setTimezone(e.target.value)}
+                size="small"
+              >
+                <MenuItem value="UTC">UTC</MenuItem>
+                <MenuItem value="America/New_York">Eastern Time (ET)</MenuItem>
+                <MenuItem value="America/Chicago">Central Time (CT)</MenuItem>
+                <MenuItem value="America/Denver">Mountain Time (MT)</MenuItem>
+                <MenuItem value="America/Los_Angeles">Pacific Time (PT)</MenuItem>
+                <MenuItem value="Europe/London">London (GMT)</MenuItem>
+                <MenuItem value="Europe/Paris">Paris (CET)</MenuItem>
+                <MenuItem value="Asia/Tokyo">Tokyo (JST)</MenuItem>
+                <MenuItem value="Asia/Shanghai">Shanghai (CST)</MenuItem>
+                <MenuItem value="Australia/Sydney">Sydney (AEDT)</MenuItem>
+              </Select>
+            </FormControl>
           </ListItem>
         </List>
       </Paper>
