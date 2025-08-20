@@ -99,7 +99,7 @@ Edit `frontend/.env` and add your configuration:
 REACT_APP_API_URL=http://localhost:8000
 
 # Firebase Configuration (Already configured in your project)
-REACT_APP_FIREBASE_API_KEY=AIzaSyB-AzTT-L1wjFO-MrND6Sf8EhXxBchtbXE
+REACT_APP_FIREBASE_API_KEY=AIzaSyB-AzTT-L1wjFO-MrND6Sf8EhXxBchtbXE_
 REACT_APP_FIREBASE_AUTH_DOMAIN=web-mobile-app-ab977.firebaseapp.com
 REACT_APP_FIREBASE_PROJECT_ID=web-mobile-app-ab977
 REACT_APP_FIREBASE_STORAGE_BUCKET=web-mobile-app-ab977.firebasestorage.app
