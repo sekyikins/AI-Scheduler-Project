@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogActions,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   Tabs,
@@ -354,9 +353,9 @@ const Tasks: React.FC = () => {
       // Default sorting for "All" tab - by due date first, then by creation date
       if (tabValue === 0) {
         filtered = filtered.sort((a, b) => {
-          const aDate = a.dueDate || a.createdAt;
-          const bDate = b.dueDate || b.createdAt;
-          return new Date(bDate).getTime() - new Date(aDate).getTime();
+        const aDate = a.dueDate || a.createdAt;
+        const bDate = b.dueDate || b.createdAt;
+        return new Date(bDate).getTime() - new Date(aDate).getTime();
         });
       }
     }
@@ -402,15 +401,15 @@ const Tasks: React.FC = () => {
               >
                 Sort
               </Button>
-             <Button
-               variant="contained"
-               startIcon={<Add />}
-               onClick={() => setOpenDialog(true)}
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => setOpenDialog(true)}
                sx={{ py: 1 }}
-             >
-               Add Task
-             </Button>
-           </Box>
+          >
+            Add Task
+          </Button>
+        </Box>
         </Box>
         
         {/* Search Interface */}
@@ -482,14 +481,14 @@ const Tasks: React.FC = () => {
                 {isSearchOpen && (searchQuery || searchPriority !== 'all')
                   ? "No tasks match your search criteria"
                   : tabValue === 0 
-                    ? "Create your first task to get started"
-                    : tabValue === 1 
-                      ? "No pending tasks"
-                      : tabValue === 2 
-                        ? "No in progress or paused tasks"
-                        : tabValue === 3 
-                          ? "No completed tasks"
-                          : "No overdue tasks"
+                  ? "Create your first task to get started"
+                  : tabValue === 1 
+                    ? "No pending tasks"
+                    : tabValue === 2 
+                      ? "No in progress or paused tasks"
+                      : tabValue === 3 
+                        ? "No completed tasks"
+                        : "No overdue tasks"
                 }
               </Typography>
             </CardContent>
@@ -497,7 +496,7 @@ const Tasks: React.FC = () => {
         ) : (
           <Grid container spacing={2}>
           {filteredTasksList.map((task) => (
-              <Grid item xs={12} sm={6} key={task.id}>
+              <Grid item xs={12} sm={6} md={4} key={task.id}>
                 <Card 
                   sx={{ 
                     height: '100%',
@@ -513,18 +512,17 @@ const Tasks: React.FC = () => {
                     },
                   }}
                 >
-                                    <CardContent sx={{ 
-                    p: 2.5, 
+                  <CardContent sx={{ 
+                    p: 1, 
                     flex: 1, 
                     display: 'flex', 
                     flexDirection: 'column',
-                    '&:last-child': { pb: 2.5 }
+                    '&:last-child': { pb: 1.5 }
                   }}>
                     {/* Header Row - Checkbox and Title */}
                     <Box sx={{ 
                       display: 'flex', 
                       alignItems: 'center', 
-                      mb: 1.5,
                       minHeight: 40
                     }}>
                     <Checkbox
@@ -540,134 +538,147 @@ const Tasks: React.FC = () => {
                         }}
                       />
                         <Typography 
-                        variant="body2" 
+                        variant="h6" 
                         fontWeight={600}
                           sx={{ 
                           flex: 1,
                             textDecoration: task.status === 'completed' ? 'line-through' : 'none',
                             color: task.status === 'completed' ? 'text.secondary' : 'text.primary',
-                          lineHeight: 1.4,
+                          lineHeight: 1.2,
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
-                          fontSize: '0.875rem',
                           }}
                         >
                         {task.title}
                       </Typography>
                     </Box>
 
-                    {/* Content Area - Aligned with title */}
+                    {/* Content Area - Two columns: description and meta */}
                     <Box sx={{ 
                       flex: 1, 
                       display: 'flex', 
-                      flexDirection: 'column',
-                      pl: 4.5, // Align with title (checkbox width + margin)
-                      justifyContent: 'space-between'
+                      flexDirection: 'row',
+                      pl: 3, // Align with title (checkbox width + margin)
+                      alignItems: 'stretch',
+                      gap: 0
                     }}>
-                      {/* Description */}
+                      {/* Left: Description container fills remaining space */}
+                      <Box sx={{ flex: 1, pr: 1, minWidth: 0 }}>
                       {task.description && (
                           <Typography 
-                          variant="caption" 
+                            variant="body2" 
                             color="textSecondary" 
-                          sx={{ 
-                            mb: 1.5,
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            lineHeight: 1.4,
-                            fontSize: '0.75rem',
-                          }}
+                            sx={{ 
+                              mb: 1.5,
+                              display: '-webkit-box',
+                              WebkitLineClamp: 5,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              lineHeight: 1.5,
+                              whiteSpace: 'normal',
+                              wordBreak: 'break-word'
+                            }}
                           >
                           {task.description}
                         </Typography>
                       )}
-                        
-                                             {/* Due Date and Estimated Time */}
-                       <Box sx={{ 
-                         display: 'flex', 
-                         flexDirection: 'column',
-                         gap: 0.5,
-                         mb: 1.5
-                       }}>
-                         {task.dueDate && (
-                           <Box sx={{ 
-                             display: 'flex', 
-                             alignItems: 'center', 
-                             gap: 0.5
-                           }}>
-                             <CalendarToday sx={{ 
-                               fontSize: '0.8rem', 
-                               color: 'text.secondary' 
-                             }} />
-                             <Typography 
-                               variant="caption" 
-                               color="textSecondary"
-                               sx={{ 
-                                 fontSize: '0.7rem',
-                                 fontWeight: 500
-                               }}
-                             >
-                               Due: {formatDate(task.dueDate)}
-                             </Typography>
-                           </Box>
-                         )}
-                         {task.estimatedDuration && (
-                           <Box sx={{ 
-                             display: 'flex', 
-                             alignItems: 'center', 
-                             gap: 0.5
-                           }}>
-                             <AccessTime sx={{ 
-                               fontSize: '0.8rem', 
-                               color: 'text.secondary' 
-                             }} />
-                             <Typography 
-                               variant="caption" 
-                               color="textSecondary"
-                               sx={{ 
-                                 fontSize: '0.7rem',
-                                 fontWeight: 500
-                               }}
-                             >
-                               Estimated: {task.estimatedDuration} minutes
-                             </Typography>
-                           </Box>
-                         )}
-                       </Box>
+                      </Box>
 
-                        {/* Tags */}
+                      <Divider orientation="vertical" flexItem />
+
+                      {/* Right: Meta container fits content */}
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, maxWidth: '50%', p: 1, pt: 0 }}>
+                        {task.dueDate && (
+                          <Box sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: 0.5
+                          }}>
+                            <CalendarToday sx={{ 
+                              fontSize: 20, 
+                              color: 'text.secondary' 
+                            }} />
+                            <Typography 
+                              variant="caption" 
+                              color="textSecondary"
+                              sx={{ 
+                                fontSize: '0.7rem',
+                                fontWeight: 500
+                              }}
+                            >
+                              Due: {formatDate(task.dueDate)}
+                            </Typography>
+                          </Box>
+                        )}
+                        {task.estimatedDuration && (
+                          <Box sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: 0.5
+                          }}>
+                            <AccessTime sx={{ 
+                              fontSize: 20, 
+                              color: 'text.secondary' 
+                            }} />
+                            <Typography 
+                              variant="caption" 
+                              color="textSecondary"
+                              sx={{ 
+                                fontSize: '0.7rem',
+                                fontWeight: 500
+                              }}
+                            >
+                               {task.estimatedDuration} minutes
+                            </Typography>
+                          </Box>
+                        )}
                         {task.tags && task.tags.length > 0 && (
                           <Box sx={{ 
                             display: 'flex', 
                             flexWrap: 'wrap',
                             gap: 0.5,
-                            mb: 1.5
+                            maxHeight: 44,
+                            overflow: 'hidden'
                           }}>
-                            {task.tags.map((tag: string, index: number) => (
+                            {(task.tags.slice(0, 6)).map((tag: string, index: number) => (
                               <Chip
                                 key={index}
                                 label={tag}
                                 size="small"
                                 variant="outlined"
-                                                                 sx={{ 
-                                   fontSize: '0.65rem', 
-                                   height: 20,
-                                   fontWeight: 500,
-                                   borderWidth: 1,
-                                   borderColor: 'grey.300',
-                                   color: 'text.secondary',
-                                   backgroundColor: 'transparent',
-                                   '&:hover': {
-                                     backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                                   }
-                                 }}
+                                sx={{ 
+                                  fontSize: '0.65rem', 
+                                  height: 20,
+                                  fontWeight: 500,
+                                  borderWidth: 1,
+                                  borderColor: 'grey.300',
+                                  color: 'text.secondary',
+                                  backgroundColor: 'transparent',
+                                  '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                                  }
+                                }}
                               />
                             ))}
+                            {task.tags.length > 6 && (
+                              <Chip
+                                label="..."
+                                size="small"
+                                variant="outlined"
+                                sx={{ 
+                                  height: 20,
+                                  fontWeight: 600,
+                                  borderWidth: 1,
+                                  borderColor: 'grey.300'
+                                }}
+                              />
+                            )}
                           </Box>
                         )}
+                      </Box>
                     </Box>
 
                     {/* Bottom Row - Status, Priority, and Actions */}
@@ -677,9 +688,9 @@ const Tasks: React.FC = () => {
                       justifyContent: 'space-between',
                       borderTop: '1px solid',
                       borderColor: 'divider',
-                      pt: 1.5,
+                      pt: 1,
                       mt: 'auto',
-                      pl: 4.5 // Align with description and title
+                      pl: 3 // Align with description and title
                     }}>
                       {/* Status and Priority Chips */}
                       <Box sx={{ 
@@ -715,15 +726,15 @@ const Tasks: React.FC = () => {
                         )}
                     </Box>
                       
-                                             {/* Action Buttons */}
-                       <Box sx={{ 
-                         display: 'flex', 
-                         gap: 1, 
-                         alignItems: 'center'
-                       }}>
+                      {/* Action Buttons */}
+                      <Box sx={{ 
+                        display: 'flex', 
+                        gap: 1, 
+                        alignItems: 'center'
+                      }}>
                          <Tooltip title="Edit Task">
-                           <IconButton
-                             size="small"
+                        <IconButton
+                          size="small"
                              onClick={() => handleEditTask(task)}
                              color="primary"
                              sx={{ 
@@ -735,45 +746,45 @@ const Tasks: React.FC = () => {
                                }
                              }}
                            >
-                             <Edit sx={{ fontSize: '1rem' }} />
-                           </IconButton>
+                             <Edit fontSize="small" />
+                    </IconButton>
                          </Tooltip>
                          
-                         <Tooltip title={getTaskActionTitle(task)}>
-                         <IconButton
-                           size="small"
-                           onClick={() => handleTaskAction(task)}
-                           color={getTaskActionColor(task)}
-                           sx={{ 
-                             width: 32, 
-                             height: 32,
-                             '&:hover': {
-                               backgroundColor: `${getTaskActionColor(task)}.light`,
-                               color: `${getTaskActionColor(task)}.contrastText`
-                             }
-                           }}
-                         >
-                           {getTaskActionIcon(task)}
-                     </IconButton>
-                         </Tooltip>
-                         
-                         <Tooltip title="Delete Task">
-                         <IconButton
-                           size="small"
-                           onClick={() => handleDeleteTask(task.id)}
-                           color="error"
-                           sx={{ 
-                             width: 32, 
-                             height: 32,
-                             '&:hover': {
-                               backgroundColor: 'error.light'
-                             }
-                           }}
-                         >
-                           <Delete sx={{ fontSize: '1rem' }} />
-                         </IconButton>
-                         </Tooltip>
-                   </Box>
+                        <Tooltip title={getTaskActionTitle(task)}>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleTaskAction(task)}
+                          color={getTaskActionColor(task)}
+                          sx={{ 
+                            width: 32, 
+                            height: 32,
+                            '&:hover': {
+                              backgroundColor: `${getTaskActionColor(task)}.light`,
+                              color: `${getTaskActionColor(task)}.contrastText`
+                            }
+                          }}
+                        >
+                          {getTaskActionIcon(task)}
+                    </IconButton>
+                        </Tooltip>
+                        
+                        <Tooltip title="Delete Task">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDeleteTask(task.id)}
+                          color="error"
+                          sx={{ 
+                            width: 32, 
+                            height: 32,
+                            '&:hover': {
+                              backgroundColor: 'error.light'
+                            }
+                          }}
+                        >
+                          <Delete fontSize="small" />
+                        </IconButton>
+                        </Tooltip>
+                  </Box>
                 </Box>
               </CardContent>
             </Card>
@@ -783,29 +794,29 @@ const Tasks: React.FC = () => {
         )}
       </Box>
 
-             {/* Add Task Dialog */}
-       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-         <DialogTitle>Add New Task</DialogTitle>
-         <DialogContent sx={{ p: 2 }}>
-           <TextField
-             autoFocus
-             margin="dense"
-             label="Task Title"
-             fullWidth
-             variant="outlined"
-             value={newTask.title}
-             onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-           />
-           <TextField
-             margin="dense"
-             label="Description"
-             fullWidth
-             multiline
-             rows={3}
-             variant="outlined"
-             value={newTask.description}
-             onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
-           />
+      {/* Add Task Dialog */}
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Add New Task</DialogTitle>
+        <DialogContent sx={{ p: 2 }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Task Title"
+            fullWidth
+            variant="outlined"
+            value={newTask.title}
+            onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+          />
+          <TextField
+            margin="dense"
+            label="Description"
+            fullWidth
+            multiline
+            rows={3}
+            variant="outlined"
+            value={newTask.description}
+            onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+          />
            
            {/* Priority Selection */}
            <Box sx={{ mb: 2 }}>
@@ -842,18 +853,18 @@ const Tasks: React.FC = () => {
            
            {/* Due Date and Estimated Duration on same line */}
            <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-             <TextField
-               margin="dense"
-               label="Due Date"
-               type="date"
+          <TextField
+            margin="dense"
+            label="Due Date"
+            type="date"
                sx={{ flex: 1 }}
-               variant="outlined"
-               value={newTask.dueDate ? newTask.dueDate.toISOString().split('T')[0] : ''}
-               onChange={(e) => setNewTask({ 
-                 ...newTask, 
-                 dueDate: e.target.value ? new Date(e.target.value) : undefined 
-               })}
-               InputLabelProps={{ shrink: true }}
+            variant="outlined"
+            value={newTask.dueDate ? newTask.dueDate.toISOString().split('T')[0] : ''}
+            onChange={(e) => setNewTask({ 
+              ...newTask, 
+              dueDate: e.target.value ? new Date(e.target.value) : undefined 
+            })}
+            InputLabelProps={{ shrink: true }}
              />
                            <TextField
                 margin="dense"
@@ -876,15 +887,15 @@ const Tasks: React.FC = () => {
               label="Tags"
               helperText="Add tags to categorize your task"
               limit={10}
-            />
-          </DialogContent>
+          />
+        </DialogContent>
           <DialogActions>
-           <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
-           <Button onClick={handleCreateTask} variant="contained" disabled={!newTask.title}>
-             Create Task
-           </Button>
-         </DialogActions>
-       </Dialog>
+          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+          <Button onClick={handleCreateTask} variant="contained" disabled={!newTask.title}>
+            Create Task
+          </Button>
+        </DialogActions>
+      </Dialog>
 
                {/* Edit Task Dialog */}
         <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>

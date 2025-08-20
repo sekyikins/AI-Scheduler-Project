@@ -5,10 +5,8 @@ import {
   Card,
   CardContent,
   ListItem,
-  ListItemIcon,
   IconButton,
   Chip,
-  Avatar,
   Button,
   Tabs,
   Tab,
@@ -176,16 +174,16 @@ const NotificationsPage: React.FC = () => {
             <Tab label={`Read (${readCount})`} />
           </Tabs>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {unreadCount > 0 && (
+          {unreadCount > 0 && (
               <Tooltip title="Mark all as read">
-                <Button
-                  variant="outlined"
-                  startIcon={<MarkEmailRead />}
-                  onClick={handleMarkAllAsRead}
-                  size="small"
-                >
-                  Mark All Read
-                </Button>
+            <Button
+              variant="outlined"
+              startIcon={<MarkEmailRead />}
+              onClick={handleMarkAllAsRead}
+              size="small"
+            >
+              Mark All Read
+            </Button>
               </Tooltip>
             )}
             <Tooltip title="Reload notifications">
@@ -282,7 +280,7 @@ const NotificationsList: React.FC<NotificationsListProps> = ({
 }) => (
   <Box sx={{ 
     display: 'grid', 
-    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+    gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     gap: 2,
     alignItems: 'start'
   }}>
@@ -290,100 +288,75 @@ const NotificationsList: React.FC<NotificationsListProps> = ({
       <Box key={notification.id}>
         <ListItem
           sx={{
-            border: `1px solid ${theme.palette.divider}`,
+            border: `5px solid ${theme.palette.divider}`,
             borderRadius: 2,
             mb: 2,
             backgroundColor: notification.read ? 'transparent' : 'action.hover',
             '&:hover': {
               backgroundColor: 'action.hover',
             },
-            height: 160,
+            height: 'auto',
             display: 'flex',
+            flexDirection: 'column',
+            p: 2,
             alignItems: 'stretch',
-            gap: 2,
-            p: 3,
+            textAlign: 'left'
           }}
         >
-          {/* Left side: Color indicator */}
-          <ListItemIcon sx={{ minWidth: 48, display: 'flex', alignItems: 'flex-start' }}>
-            <Avatar
-              sx={{
-                width: 40,
-                height: 40,
-                bgcolor: getNotificationColor(notification.type),
-              }}
-            >
-              {getNotificationIcon(notification.type)}
-            </Avatar>
-          </ListItemIcon>
-
-          {/* Middle: Content container */}
-          <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: 0 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Typography
-                variant="h6"
-                fontWeight={notification.read ? 400 : 600}
-                sx={{ lineHeight: 1.2 }}
-              >
-                {notification.title}
-              </Typography>
-              <Typography 
-                variant="body2" 
-                color="textSecondary"
-                sx={{ 
-                  lineHeight: 1.4,
-                  overflow: 'hidden',
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                }}
-              >
-                {notification.message}
-              </Typography>
+          {/* Header: left (indicator + title), right (time) */}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1, width: '100%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: getNotificationColor(notification.type), mr: 1.25 }} />
+                <Typography
+                  variant="h6"
+                  fontWeight={notification.read ? 400 : 600}
+                sx={{ lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                >
+                  {notification.title}
+                </Typography>
             </Box>
-            
-            {/* Tips/info always at bottom */}
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap', mt: 'auto' }}>
-              <Chip
-                label={notification.type}
-                size="small"
-                color={notification.type as any}
-                variant="outlined"
-              />
-              {notification.taskId && (
-                <Chip
-                  label="Task Related"
-                  size="small"
-                  variant="outlined"
-                />
-              )}
-            </Box>
+            <Box sx={{ ml: 'auto', flexShrink: 0 }}>
+                <Typography variant="caption" color="textSecondary">
+                  {formatTime(notification.createdAt)}
+                </Typography>
+              </Box>
           </Box>
 
-          {/* Right side: Time and actions container */}
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1, minWidth: 'fit-content' }}>
-            <Typography variant="caption" color="textSecondary" sx={{ textAlign: 'right', width: '100%', mr: 1 }}>
-              {formatTime(notification.createdAt)}
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-              {!notification.read && (
+          {/* Body: message */}
+          <Typography 
+            variant="body2" 
+            color="textSecondary"
+            sx={{ 
+              lineHeight: 1.4,
+              overflow: 'hidden',
+              display: '-webkit-box',
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: 'vertical',
+            }}
+          >
+                  {notification.message}
+                </Typography>
+
+          {/* Footer: tags and actions aligned like tasks bottom row */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid', borderColor: 'divider', pt: 1, mt: 1, width: '100%' }}>
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
+              <Chip label={notification.type} size="small" color={notification.type as any} variant="outlined" />
+                  {notification.taskId && (
+                <Chip label="Task Related" size="small" variant="outlined" />
+                  )}
+                </Box>
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            {!notification.read && (
                 <Tooltip title="Mark as read">
-                  <IconButton
-                    size="small"
-                    onClick={() => onMarkAsRead(notification.id)}
-                  >
-                    <MarkEmailRead fontSize="small" color="primary" />
-                  </IconButton>
+                  <IconButton size="small" onClick={() => onMarkAsRead(notification.id)}>
+                <MarkEmailRead fontSize="small" color="primary" />
+              </IconButton>
                 </Tooltip>
               )}
               <Tooltip title="Delete notification">
-                <IconButton
-                  size="small"
-                  onClick={() => onDelete(notification.id)}
-                  color="error"
-                >
-                  <Delete fontSize="small" />
-                </IconButton>
+                <IconButton size="small" onClick={() => onDelete(notification.id)} color="error">
+              <Delete fontSize="small" />
+            </IconButton>
               </Tooltip>
             </Box>
           </Box>

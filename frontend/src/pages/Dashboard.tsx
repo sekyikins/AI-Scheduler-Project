@@ -268,13 +268,13 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <Grid container spacing={{ xs: 1, sm: 2 }}>
-        {/* Progress and Tasks */}
+        {/* Left Column: Progress, Streak, High Priority */}
         <Grid item xs={12} lg={8}>
           <Grid container spacing={{ xs: 1, sm: 2 }}>
-            {/* Progress Section */}
-            <Grid item xs={12}>
+            {/* Progress and Daily Streak side-by-side */}
+            <Grid item xs={12} md={9}>
               <Card>
-                <CardContent sx={{ p: 2 }}>
+                <CardContent sx={{ p: 2, height: '100%' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                     <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 2 }}>
                       <TrendingUp />
@@ -298,46 +298,47 @@ const Dashboard: React.FC = () => {
                         {completionRate.toFixed(1)}%
                       </Typography>
                     </Box>
-                    <Box
-                      sx={{
-                        height: 12,
-                        borderRadius: 6,
-                        backgroundColor: theme.palette.grey[200],
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          height: '100%',
-                          width: `${completionRate}%`,
-                          backgroundColor: theme.palette.primary.main,
-                          borderRadius: 6,
-                          transition: 'width 0.3s ease',
-                        }}
-                      />
+                    <Box sx={{ height: 12, borderRadius: 6, backgroundColor: theme.palette.grey[200], overflow: 'hidden' }}>
+                      <Box sx={{ height: '100%', width: `${completionRate}%`, backgroundImage: 'linear-gradient(90deg, #6366f1, #8b5cf6)', borderRadius: 6, transition: 'width 0.3s ease' }} />
                     </Box>
               </Box>
 
                   <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-                    <Chip
-                      icon={<Assignment />}
-                      label={`${pendingTasks.length} Pending`}
-                      color="default"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<PlayArrow />}
-                      label={`${inProgressTasks.length} In Progress`}
-                      color="warning"
-                      variant="outlined"
-                    />
-                    <Chip
-                      icon={<CheckCircle />}
-                      label={`${completedTasks.length} Completed`}
-                      color="success"
-                      variant="outlined"
-              />
+                    <Chip icon={<Assignment />} label={`${pendingTasks.length} Pending`} color="default" variant="outlined" />
+                    <Chip icon={<PlayArrow />} label={`${inProgressTasks.length} In Progress`} color="warning" variant="outlined" />
+                    <Chip icon={<CheckCircle />} label={`${completedTasks.length} Completed`} color="success" variant="outlined" />
             </Box>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={3} sx={{ display: 'flex', alignItems: 'stretch' }}>
+              <Card>
+                <CardContent sx={{ p: 2, height: '100%' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+                    <Typography variant="subtitle1" fontWeight={600}>
+                      Daily Streak
+                    </Typography>
+                    <Avatar sx={{ bgcolor: theme.palette.secondary.main, width: 28, height: 28 }}>
+                      <TrendingUp sx={{ fontSize: 18 }} />
+                    </Avatar>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1 }}>
+                    <Typography variant="h4" fontWeight={700}>5</Typography>
+                    <Typography variant="caption" color="textSecondary">days</Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0.5, mb: 0.5 }}>
+                    {[...Array(7)].map((_, idx) => (
+                      <Box key={idx} sx={{
+                        height: 6,
+                        borderRadius: 3,
+                        backgroundColor: idx < 5 ? theme.palette.success.main : theme.palette.grey[400],
+                        opacity: idx < 5 ? 0.95 : 0.5
+                      }} />
+                    ))}
+                  </Box>
+                  <Typography variant="caption" color="textSecondary">Sun - Sat</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -368,9 +369,7 @@ const Dashboard: React.FC = () => {
                           border: `1px solid ${theme.palette.divider}`,
                           borderRadius: 2,
                           mb: 1,
-                          '&:hover': {
-                            backgroundColor: 'action.hover',
-                          },
+                          '&:hover': { backgroundColor: 'action.hover' },
                         }}
                   secondaryAction={
                           <Box sx={{ display: 'flex', gap: 1 }}>
@@ -390,19 +389,9 @@ const Dashboard: React.FC = () => {
                     primary={task.title}
                     secondary={
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                        <Chip 
-                          label={task.priority} 
-                          size="small" 
-                                color="error"
-                                icon={getPriorityIcon(task.priority)}
-                        />
+                              <Chip label={task.priority} size="small" color="error" icon={getPriorityIcon(task.priority)} />
                         {task.dueDate && (
-                                <Chip
-                                  icon={<CalendarToday fontSize="small" />}
-                                  label={formatDate(task.dueDate)}
-                                  size="small"
-                                  variant="outlined"
-                                />
+                                <Chip icon={<CalendarToday fontSize="small" />} label={formatDate(task.dueDate)} size="small" variant="outlined" />
                         )}
                       </Box>
                     }
@@ -411,10 +400,7 @@ const Dashboard: React.FC = () => {
               ))}
               {highPriorityTasks.length === 0 && (
                 <ListItem>
-                  <ListItemText
-                    primary="No high priority tasks"
-                    secondary="Great job! All tasks are under control."
-                  />
+                        <ListItemText primary="No high priority tasks" secondary="Great job! All tasks are under control." />
                 </ListItem>
               )}
             </List>

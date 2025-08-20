@@ -261,7 +261,6 @@ const Layout = () => {
             sx={{ 
               display: 'flex', 
               alignItems: 'center', 
-              mb: 1,
               cursor: 'pointer',
               p: 1,
               borderRadius: 1,
@@ -314,6 +313,7 @@ const Layout = () => {
             sm: `${currentDrawerWidth}px` 
           },
           backgroundColor: theme.palette.background.paper,
+          backgroundImage: 'linear-gradient(90deg, rgba(99,102,241,0.08), rgba(245,158,11,0.08))',
           borderBottom: `1px solid ${theme.palette.divider}`,
           color: theme.palette.text.primary,
           height: { xs: 56, sm: 64 },
@@ -438,6 +438,7 @@ const Layout = () => {
               boxSizing: 'border-box', 
               width: currentDrawerWidth,
               backgroundColor: theme.palette.background.paper,
+              backgroundImage: 'linear-gradient(180deg, rgba(99,102,241,0.06), rgba(245,158,11,0.06))',
               borderRight: `1px solid ${theme.palette.divider}`,
               transition: 'width 0.2s ease-in-out',
             },

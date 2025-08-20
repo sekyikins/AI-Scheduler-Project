@@ -51,10 +51,27 @@ const Assistant: React.FC = () => {
   const [historyAnchorEl, setHistoryAnchorEl] = useState<null | HTMLElement>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+  // Removed unused audioChunks state
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('assistantConversations');
+      if (saved) {
+        const parsed: Conversation[] = JSON.parse(saved);
+        setConversations(parsed.map(c => ({ ...c, createdAt: new Date(c.createdAt) })));
+        if (parsed.length > 0) setCurrentConversation(parsed[0]);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('assistantConversations', JSON.stringify(conversations));
+    } catch {}
+  }, [conversations]);
 
   const handleSubmit = async () => {
     if (!command.trim()) return;
@@ -163,11 +180,10 @@ const Assistant: React.FC = () => {
       };
       
       recorder.onstop = () => {
-        const audioBlob = new Blob(chunks, { type: 'audio/wav' });
         // For now, just indicate recording was done
         // In a real app, you'd send this to a speech-to-text service
         setCommand(prev => prev + ' [Voice message recorded]');
-        setAudioChunks(chunks);
+        // chunks captured; could be sent to STT service
         setIsRecording(false);
         stream.getTracks().forEach(track => track.stop());
       };
@@ -175,7 +191,7 @@ const Assistant: React.FC = () => {
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
-      setAudioChunks([]);
+      // reset captured audio if needed
     } catch (error) {
       console.error('Error starting recording:', error);
       alert('Could not access microphone. Please check permissions.');
@@ -567,7 +583,7 @@ const Assistant: React.FC = () => {
                   },
                     '&.Mui-disabled': {
                     bgcolor: theme.palette.action.disabled,
-                      color: theme.palette.action.disabledBackground,
+                      color: 'white',
                   },
                 }}
               >
