@@ -164,7 +164,7 @@ const Dashboard: React.FC = () => {
       }}>
         <Box>
           <Typography variant="h3" fontWeight={700} gutterBottom sx={{ fontSize: { xs: '1.75rem', sm: '2.125rem' } }}>
-            Welcome back, {user?.name}! 👋
+            Welcome back, {user?.name?.split(' ')[0] || user?.name}! 👋
           </Typography>
           <Typography variant="body1" color="textSecondary" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
             Here's what's happening with your tasks today

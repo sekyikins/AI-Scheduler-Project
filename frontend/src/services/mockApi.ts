@@ -24,10 +24,22 @@ export const mockAuthAPI = {
   login: async (email: string, password: string) => {
     await delay(1000); // Simulate network delay
     
-    if (email === 'demo@example.com' && password === 'password') {
+    // Accept multiple demo credentials for testing
+    const validCredentials = [
+      { email: 'demo@example.com', password: 'password' },
+      { email: 'test@example.com', password: 'password123' },
+      { email: 'demo@aischeduler.com', password: 'demo123' },
+      { email: 'admin@aischeduler.com', password: 'admin2024' },
+    ];
+    
+    const isValid = validCredentials.some(
+      cred => cred.email === email && cred.password === password
+    );
+    
+    if (isValid) {
       return createMockResponse({
         token: 'mock-jwt-token-12345',
-        user: mockUser,
+        user: { ...mockUser, email, name: email.split('@')[0] },
       }, 'Login successful');
     } else {
       throw new Error('Invalid credentials');
@@ -36,6 +48,12 @@ export const mockAuthAPI = {
 
   register: async (email: string, password: string, name: string) => {
     await delay(1000);
+    
+    // Check if email already exists (simulate duplicate email check)
+    if (email === 'demo@example.com' || email === 'test@example.com' || 
+        email === 'demo@aischeduler.com' || email === 'admin@aischeduler.com') {
+      throw new Error('Email already exists');
+    }
     
     return createMockResponse({
       token: 'mock-jwt-token-12345',
